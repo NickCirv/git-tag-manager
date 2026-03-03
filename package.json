@@ -1,7 +1,7 @@
 {
   "name": "git-tag-manager",
   "version": "1.0.0",
-  "description": "Interactive TUI for managing git tags and releases. Zero dependencies.",
+  "description": "Manage Git tags — list, create, delete, push with rich formatting",
   "type": "module",
   "bin": {
     "git-tag-manager": "./index.js",
@@ -13,9 +13,6 @@
   "files": [
     "index.js"
   ],
-  "scripts": {
-    "start": "node index.js"
-  },
   "keywords": [
     "developer-tools",
     "cli",
@@ -23,9 +20,7 @@
     "zero-dependencies",
     "git",
     "tags",
-    "releases",
-    "tui",
-    "interactive"
+    "version-management"
   ],
   "author": "NickCirv",
   "license": "MIT",

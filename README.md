@@ -1,80 +1,129 @@
 # git-tag-manager
 
-> Interactive TUI for managing git tags and releases. Zero dependencies.
+Manage Git tags from the terminal — list, search, create, delete, push with rich ANSI formatting and JSON output mode.
+
+Zero external dependencies. Pure Node.js ES modules. Node 18+.
+
+```
+  TAG             DATE        SHA      TYPE         MESSAGE
+  ────────────────────────────────────────────────────────────────────────
+  v2.0.0          2026-03-01  a1b2c3d  annotated    Major release
+  v1.1.0          2026-02-15  d4e5f6a  annotated    Release 1.1.0 — fixes
+  v1.0.0          2026-01-10  b7c8d9e  lightweight  init
+  old-format-tag  2025-12-20  f0a1b2c  lightweight  initial commit
+
+  Total: 4 tag(s)
+```
 
 ## Install
 
 ```bash
 # Run without installing
-npx git-tag-manager
+npx git-tag-manager list
 
-# Or install globally
+# Install globally
 npm install -g git-tag-manager
 ```
 
-## Quick Start
-
-```
-$ gtm
-
-  git-tag-manager — interactive tag browser
-  ↑↓ navigate  Enter=details  n=new  d=delete  p=push  r=refresh  q=quit
-
-  TAG              DATE        SHA      MESSAGE
-  ──────────────────────────────────────────────────────────────────────
-▶ v1.2.0          2024-03-01  a1b2c3d  Release 1.2.0 — new features
-  v1.1.0          2024-02-15  d4e5f6a  Release 1.1.0 — bug fixes
-  v1.0.0          2024-01-10  b7c8d9e  Initial release
-  v0.9.0-beta     2023-12-20  f0a1b2c  Beta release
-```
+Both `git-tag-manager` and `gtm` are available as bin aliases.
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `gtm` | Open interactive TUI |
-| `gtm list` | Table view: tag, date, sha, message |
-| `gtm create <tag>` | Create a tag (annotated or lightweight) |
-| `gtm delete <tag>` | Delete local tag |
-| `gtm push` | Push all unpushed tags to remote |
-| `gtm search <pattern>` | Filter tags by name or message |
-| `gtm compare <tag1> <tag2>` | Diff stats between two tags |
-| `gtm latest` | Show the most recent tag |
-
-### Options
+### list
 
 ```bash
-gtm create v1.3.0 --message "Release 1.3.0"   # annotated tag
-gtm create v1.3.0 --message "..." --push        # create and push
-gtm delete v0.1.0 --remote                      # delete local + remote
-gtm push --all                                   # push every tag
+gtm list
+gtm list --sort date
+gtm list --sort name
+gtm list --json
 ```
 
-## Interactive TUI Keys
+Shows all tags (annotated + lightweight) with date, SHA, type, and message. Sorted semver-aware by default.
 
-| Key | Action |
-|---|---|
-| `↑` / `k` | Navigate up |
-| `↓` / `j` | Navigate down |
-| `Enter` | Show tag details |
-| `n` | Create new tag |
-| `d` | Delete selected tag |
-| `p` | Push selected tag to remote |
-| `r` | Refresh list |
-| `q` / `Ctrl+C` | Quit |
+### show
 
-## Features
+```bash
+gtm show v1.2.0
+gtm show v1.2.0 --json
+```
 
-- Semver-aware sorting (`v1.10.0` ranks above `v1.9.0`)
-- ANSI colors and clean table layout
-- Annotated + lightweight tag support
-- Safe: uses `spawnSync` — no shell injection
-- Works with any git remote
+Full tag detail — commit hash, author, date, tag message, and commit body.
 
-## Why?
+### create
 
-Because nobody memorises `git tag -a v1.2.0 -m "..."` and `git push origin --tags` every time. `gtm` gives you a visual interface with sane defaults and keyboard shortcuts — no flags, no docs, just navigate and act.
+```bash
+gtm create v1.3.0
+gtm create v1.3.0 --message "Release 1.3.0"    # annotated
+gtm create v1.3.0 --message "Release 1.3.0" --push
+```
 
----
+### delete
 
-Built with Node.js · Zero dependencies · MIT License
+```bash
+gtm delete v0.1.0
+gtm delete v0.1.0 --remote    # delete local + remote
+gtm delete v0.1.0 --json
+```
+
+### push
+
+```bash
+gtm push v1.3.0               # push a specific tag
+gtm push                       # push all tags not yet on remote
+gtm push --all                 # push everything (git push --tags)
+```
+
+### search
+
+```bash
+gtm search "v1.*"
+gtm search "release"
+gtm search --from 2025-01-01
+gtm search --from 2025-01-01 --to 2025-12-31
+gtm search "v2" --from 2026-01-01 --json
+```
+
+Glob/regex-style pattern matching on tag name and message. Optional date range filters.
+
+### batch-delete
+
+```bash
+gtm batch-delete --older-than 90 --dry-run    # preview
+gtm batch-delete --older-than 90              # delete stale local tags
+gtm batch-delete --older-than 90 --remote     # delete local + remote
+gtm batch-delete --older-than 90 --json
+```
+
+Batch delete all tags older than N days.
+
+## JSON output
+
+Every command supports `--json` for scripting and piping:
+
+```bash
+gtm list --json | jq '.[0]'
+# {
+#   "name": "v2.0.0",
+#   "date": "2026-03-01",
+#   "sha": "a1b2c3d",
+#   "type": "tag",
+#   "message": "Major release"
+# }
+
+gtm batch-delete --older-than 60 --dry-run --json | jq '.wouldDelete'
+```
+
+## Security
+
+- Uses `spawnSync` with explicit argument arrays — no shell injection possible
+- Never calls `exec` or `execSync`
+- No external dependencies — nothing from npm beyond Node.js itself
+
+## Requirements
+
+- Node.js 18+
+- Git available on PATH
+
+## License
+
+MIT
