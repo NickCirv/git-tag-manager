@@ -1,0 +1,40 @@
+{
+  "name": "git-tag-manager",
+  "version": "1.0.0",
+  "description": "Interactive TUI for managing git tags and releases. Zero dependencies.",
+  "type": "module",
+  "bin": {
+    "git-tag-manager": "./index.js",
+    "gtm": "./index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "developer-tools",
+    "cli",
+    "nodejs",
+    "zero-dependencies",
+    "git",
+    "tags",
+    "releases",
+    "tui",
+    "interactive"
+  ],
+  "author": "NickCirv",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NickCirv/git-tag-manager.git"
+  },
+  "homepage": "https://github.com/NickCirv/git-tag-manager#readme",
+  "bugs": {
+    "url": "https://github.com/NickCirv/git-tag-manager/issues"
+  }
+}
