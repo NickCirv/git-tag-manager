@@ -1,3 +1,5 @@
+![Banner](banner.svg)
+
 # git-tag-manager
 
 Manage Git tags from the terminal — list, search, create, delete, push with rich ANSI formatting and JSON output mode.
