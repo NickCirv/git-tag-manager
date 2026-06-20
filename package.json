@@ -7,8 +7,11 @@
     "git-tag-manager": "./index.js",
     "gtm": "./index.js"
   },
+  "scripts": {
+    "test": "node --test"
+  },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "files": [
     "index.js"
